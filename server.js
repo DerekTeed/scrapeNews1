@@ -3,19 +3,20 @@ var logger = require("morgan");
 var mongoose = require("mongoose");
 var exphbs  = require('express-handlebars');
 var bodyParser = require('body-parser');
+var request = require("request");
 // Our scraping tools
 // Axios is a promised-based http library, similar to jQuery's Ajax method
 // It works on the client and on the server
 var axios = require("axios");
 var cheerio = require("cheerio");
+var app = express();
+app.engine('handlebars', exphbs());
+app.set('view engine', 'handlebars');
 
 // Require all models
 var db = require("./models");
 
 var PORT = 3007;
-
-// Initialize Express
-var app = express();
 
 // Configure middleware
 
@@ -25,15 +26,15 @@ app.use(logger("dev"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // Make public a static folder
-app.use(express.static("public"));
+//app.use(express.static("public"));
 
 // Connect to the Mongo DB
 mongoose.connect("mongodb://localhost/newsScraper", { useNewUrlParser: true });
 
-// Routes
-app.destroy
-mongoose.dropdatabase("")
-// A GET route for scraping the echoJS website
+// // Routes
+// //app.destroy
+// //mongoose.dropdatabase("")
+// // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
   axios.get("https://www.nytimes.com/section/sports").then(function(response) {
@@ -66,10 +67,38 @@ app.get("/scrape", function(req, res) {
     });
 
     // Send a message to the client
-
     res.redirect("/");
   });
 });
+
+
+// renders the homepage with the articles that exist in the database
+app.get('/', function(req, res){
+	db.Article.find({}, function(error, found){
+		res.render('home', {
+			article: found
+		});
+	})
+})
+
+
+
+// app.get("/articles", function (req, res) {
+//   res.render("articles")
+// })
+
+app.get('/saved', function(req, res){
+	res.render('articles')
+})
+
+//I need an app.get saved articles that i clicked on, render to /articles
+app.get('/', function(req, res){
+	db.Article.find({}, function(error, saved){
+		res.render('articles', {
+			saved: saved
+		});
+	})
+})
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {

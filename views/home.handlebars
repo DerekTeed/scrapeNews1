@@ -1,0 +1,46 @@
+<nav class="navbar navbar-light navbar-expand-lg">
+  <a class="navbar-brand" href="/">Mongo Scraper</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/saved">Saved Articles</a>
+      </li>
+    </ul>
+    <a href="/scrape" class="btn btn-warning">Scrape New Articles</a>
+  </div>
+</nav>
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-3">Get the latest articles</h1>
+  </div>
+</div>
+
+<div class="container">
+<div class="new-articles">
+		{{#if article}}
+      {{#each article}}
+        {{#unless saved}}
+    			<div class="card mb-3">
+      				<h5 class="card-header">{{this.title}}</h5>
+      				<div class="card-body">
+        				<p class="card-text">{{this.summary}}</p>
+                <a href={{this.link}}> Link to the original article </a>
+                <br><br>
+                <button class="btn btn-primary save-button" data-id="{{ this.id }}">Save this article</button>
+    				</div>
+    			</div>
+          {{/unless}}
+      {{/each}}
+		{{else}}
+			<h4 class="text-center">Hit the scrap button to populate articles.</h4>
+		{{/if}}
+    <div id="articles"></div>
+</div>
+</div>

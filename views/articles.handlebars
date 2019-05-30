@@ -1,0 +1,71 @@
+<nav class="navbar navbar-light navbar-expand-lg">
+  <a class="navbar-brand" href="/">Mongo Scraper</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/saved">Saved Articles</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-3">Saved articles</h1>
+  </div>
+</div>
+
+<div class="container">
+<div class="saved-articles">
+    {{#if article}}
+     {{#each article}}
+      {{#if saved}}
+        <div class="card mb-3">
+            <h5 class="card-header">{{this.title}}</h5>
+            <div class="card-body">
+              <p class="card-text">{{this.summary}}</p>
+
+              {{!-- leave a comment, delete a comment, show comments --}}
+              <form action="/comment" method="POST">
+                <input type="hidden" name="id" value="{{this.id}}">
+                  <div class="form-group">
+                    <label for="comment">Leave a comment</label>
+                    <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
+                  </div>
+                  <button class="btn btn-primary float-right">Submit comment</button>
+              </form>
+              <br><br>
+
+              {{!-- prints comments from database associated with the article --}}
+              <h4>Comments left previously</h4>
+              <hr>
+              {{#if comments}}
+                {{#each comments}}
+                  <br>
+                  <p>{{this}}<button class="btn btn-light delete-comment float-right" data-id="{{ ../id }}" data-index="{{@index}}">Delete this comment</button></p>
+                  <br>
+                  <hr>
+                {{/each}}
+                {{else}}
+                    <p>No comments added yet. </p>
+              {{/if}}
+
+              {{!-- move saved article back to home page --}}
+              <br>
+              <button class="btn btn-primary delete-button float-right" data-id="{{ this.id }}">Delete from saved</button>
+          </div>
+        </div>
+      {{/if}}
+      {{/each}}
+    {{else}}
+      <h4 class="text-center">There are no saved articles yet.</h4>
+    {{/if}}
+    <div id="articles"></div>
+</div>
+</div>
