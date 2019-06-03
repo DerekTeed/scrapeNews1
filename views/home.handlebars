@@ -33,7 +33,7 @@
         				<p class="card-text">{{this.summary}}</p>
                 <a href={{this.link}}> Link to the original article </a>
                 <br><br>
-                <button class="btn btn-primary save-button" data-id="{{ this.id }}">Save this article</button>
+                <button class="btn btn-primary saved-articles" data-id="{{ this.id }}">Save this article</button>
     				</div>
     			</div>
           {{/unless}}
@@ -41,6 +41,6 @@
 		{{else}}
 			<h4 class="text-center">Hit the scrap button to populate articles.</h4>
 		{{/if}}
-    <div id="articles"></div>
+    
 </div>
 </div>

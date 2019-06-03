@@ -22,23 +22,25 @@
 </div>
 
 <div class="container">
-<div class="saved-articles">
+<div class="save-article">
+  
     {{#if article}}
      {{#each article}}
       {{#if saved}}
         <div class="card mb-3">
+          
             <h5 class="card-header">{{this.title}}</h5>
             <div class="card-body">
               <p class="card-text">{{this.summary}}</p>
 
               {{!-- leave a comment, delete a comment, show comments --}}
-              <form action="/comment" method="POST">
+              <form>
                 <input type="hidden" name="id" value="{{this.id}}">
                   <div class="form-group">
                     <label for="comment">Leave a comment</label>
                     <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
                   </div>
-                  <button class="btn btn-primary float-right">Submit comment</button>
+                  <button class="btn btn-primary float-right savenote" articleId="{{this.id}}">Submit comment</button>
               </form>
               <br><br>
 
@@ -58,14 +60,14 @@
 
               {{!-- move saved article back to home page --}}
               <br>
-              <button class="btn btn-primary delete-button float-right" data-id="{{ this.id }}">Delete from saved</button>
-          </div>
+              <button class="btn btn-primary delete-button delete-article float-right" data-id="{{ this.id }}">Delete from saved</button>
+          
         </div>
       {{/if}}
       {{/each}}
     {{else}}
       <h4 class="text-center">There are no saved articles yet.</h4>
     {{/if}}
-    <div id="articles"></div>
+    
 </div>
 </div>

@@ -81,24 +81,46 @@ app.get('/', function(req, res){
 	})
 })
 
-
-
-// app.get("/articles", function (req, res) {
-//   res.render("articles")
+// // FIX to rendersaved articles on page
+// app.get('/saved', function(req, res){
+// 	db.Article.find({saved: true}, function(error, found){
+// 		res.render('articles', {
+//       article: found,
+      
+// 		});
+// 	})
 // })
 
-app.get('/saved', function(req, res){
-	res.render('articles')
-})
 
-//I need an app.get saved articles that i clicked on, render to /articles
-app.get('/', function(req, res){
-	db.Article.find({}, function(error, saved){
-		res.render('articles', {
-			saved: saved
-		});
-	})
-})
+// Route for getting all Articles from the db for saved
+app.get("/saved", function (req, res) {
+    // TODO: Finish the route so it grabs all of the articles
+    // This will send only the true saved articles.
+    db.Article.find({saved: true})
+        .then(function (dbArticle) {
+            
+            // res.json(dbArticle);
+            console.log(dbArticle);
+            res.render('articles', { article: dbArticle });
+        })
+        .catch(function (err) {
+            // If an error occurs, send the error back to the client
+            res.json(err);
+        });
+});
+//trying to get saved articles, put them in /saved
+app.get("/articles/:id", function (req, res) {
+  db.Article.findOne({ _id: req.params.id }) 
+    .populate("note")
+    .then(function(dbArticle) {
+      // If we were able to successfully find an Article with the given id, send it back to the client
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      // If an error occurred, send it to the client
+      res.json(err);
+    });
+});
 
 // Route for getting all Articles from the db
 app.get("/articles", function(req, res) {
@@ -114,24 +136,11 @@ app.get("/articles", function(req, res) {
     });
 });
 
-// Route for grabbing a specific Article by id, populate it with it's note
-app.get("/articles/:id", function(req, res) {
-  // Using the id passed in the id parameter, prepare a query that finds the matching one in our db...
-  db.Article.findOne({ _id: req.params.id })
-    // ..and populate all of the notes associated with it
-    .populate("note")
-    .then(function(dbArticle) {
-      // If we were able to successfully find an Article with the given id, send it back to the client
-      res.json(dbArticle);
-    })
-    .catch(function(err) {
-      // If an error occurred, send it to the client
-      res.json(err);
-    });
-});
+
 
 // Route for saving/updating an Article's associated Note
 app.post("/articles/:id", function(req, res) {
+  console.log("hihihkokokok")
   // Create a new note and pass the req.body to the entry
   db.Note.create(req.body)
     .then(function(dbNote) {
@@ -149,6 +158,37 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+// Route for getting all notes back to notes in 'articles'should be good.
+app.get("/saved", function (req, res) {
+  // TODO: Finish the route so it grabs all of the articles
+  // This will send only the true saved articles.
+       db.Note.find({body: comment})
+      //.populate("note")
+      .then(function (dbNote) {
+          
+          // res.json(dbArticle);
+          console.log(dbNote);
+          res.render('articles', { saved: dbNote });
+      })
+      .catch(function (err) {
+          // If an error occurs, send the error back to the client
+          res.json(err);
+      });
+});
+
+app.put("/articles/:id", function (req, res) {
+  console.log("140", req.params.id)
+  
+  db.Article.updateOne({ _id: req.params.id }, { $set: { saved: true } }, function (err, res) {
+    if (err) {
+          console.log("Error updating document " + req.params.id);
+      } else {
+          console.log("Document " + req.params.id + " saved flag updated!");
+      }
+  })
+});
+
 
 // Start the server
 app.listen(PORT, function() {
