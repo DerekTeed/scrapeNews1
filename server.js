@@ -17,7 +17,7 @@ mongoose.connect(MONGODB_URI);
 // Require all models
 var db = require("./models");
 
-var PORT = 3007;
+var PORT = process.env.PORT || 3007;
 
 // Configure middleware
 
